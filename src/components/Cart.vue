@@ -8,7 +8,7 @@
                     <i class="bi bi-x"></i>
                   </button>
                 </div>
-                <div v-for="product in productsInCart" @click="showConsole"
+                <div v-for="product in cart" @click="showConsole"
                      class="card  px-5 mb-3 ">
                   <div class="d-flex align-items-center product_cart justify-content-between">
                     <div class="">
@@ -17,17 +17,19 @@
                         {{ ((product.title).split(" ")).slice(0,3).join(" ") }}</small>
                     </div>
                     <div>
+
                       <div>
-                        <button :disabled="items === 0" @click="decrement(product.id)"
+                        <button  @click="decreaseQuantity(product)"
                                 class="btn btn-sm btn-outline-primary">-
                         </button>
-                        {{ items }}
-                        <button @click="increment(product.id)" class="btn btn-sm btn-outline-primary">+</button>
+                        {{ product.quantity }}
+                        <button @click="increaseQuantity(product)" class="btn btn-sm btn-outline-primary">+</button>
                       </div>
-                      {{  }}
+                      $ {{ calcCost(product) }}
                     </div>
                   </div>
                 </div>
+                <h1 class="">$total {{ cartTotal.toFixed(2) }}</h1>
               </div>
             </div>
         </div>
@@ -41,36 +43,21 @@ export default {
   name:'Cart',
   data() {
     return {
-      productsInCart: [],
-      items: 0,
+
     }
   },
   computed: {
     ...mapState(['name','cart']),
     ...mapMutations(['showCart']),
+    ...mapGetters(['increaseQuantity','cartTotal','decreaseQuantity'])
+
   },
   methods: {
-    increment(id){
-      this.items +=1
+    calcCost(product){
+      return (product.quantity * product.price).toFixed(2);
     },
-    decrement(id){
-        this.items -=1
-    },
-    calcForItems(){
-
-    }
   },
-  mounted() {
-    this.cart.map(id =>{
-      fetch("https://fakestoreapi.com/products/"+id)
-      .then(res => res.json())
-      .then(data => {
-        this.productsInCart.push(data)
-      })
 
-    })
-
-  }
 }
 </script>
 <style lang="scss">

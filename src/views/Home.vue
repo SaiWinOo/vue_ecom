@@ -21,7 +21,7 @@
                     <div class="d-flex justify-content-between">
                         <router-link :to="{name:'detail',params: {id:p.id}}" class="btn btn-sm btn-outline-info">More
                           detail</router-link>
-                        <button @click="addToCart(p.id)" class="btn btn-sm btn-outline-warning">{{ cart.includes(p.id) ? " Added" : "Add to cart" }}</button>
+                        <button @click="addToCart(p)" class="btn btn-sm btn-outline-warning">{{ cart.includes(p.id) ? " Added" : "Add to cart" }}</button>
                     </div>
                 </div>
             </div>
@@ -47,10 +47,13 @@ export default {
         }
     },
     methods:{
-
-
     },
     mounted(){
+      if(localStorage.getItem('cart')){
+        this.cart = JSON.parse(localStorage.getItem('cart'));
+        console.log('ok')
+      }
+
         fetch('https://fakestoreapi.com/products')
         .then(res => res.json())
         .then(data => this.data = data)
